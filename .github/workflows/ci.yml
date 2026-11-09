@@ -1,0 +1,37 @@
+---
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install modules
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -MinimumVersion 5.5 -Force -SkipPublisherCheck
+          Install-Module PSScriptAnalyzer -Force
+      - name: Analyze and test
+        shell: pwsh
+        run: ./build.ps1
+
+  windows-powershell-51:
+    # Domain controllers often still run Windows PowerShell 5.1: make sure the module loads there.
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - shell: powershell
+        run: |
+          Import-Module ./src/ADProvisioning/ADProvisioning.psd1 -Force
+          $n = ConvertTo-AsciiName ("M" + [char]0x00FC + "ller")
+          if ($n -ne 'mueller') { throw "got '$n'" }
+          New-InitialPassword -AsPlainText | Out-Null
+          Write-Host 'Windows PowerShell 5.1: OK'

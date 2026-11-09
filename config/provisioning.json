@@ -1,0 +1,10 @@
+{
+  "UpnSuffix": "lab.local",
+  "DisabledOU": "OU=Disabled,OU=Staff,DC=lab,DC=local",
+  "DefaultGroups": ["GG-All-Staff"],
+  "Departments": {
+    "IT":        { "OU": "OU=IT,OU=Staff,DC=lab,DC=local",        "Groups": ["GG-IT", "GG-VPN"] },
+    "Finance":   { "OU": "OU=Finance,OU=Staff,DC=lab,DC=local",   "Groups": ["GG-Finance"] },
+    "Marketing": { "OU": "OU=Marketing,OU=Staff,DC=lab,DC=local", "Groups": ["GG-Marketing"] }
+  }
+}

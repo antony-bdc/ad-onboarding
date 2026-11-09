@@ -1,0 +1,4 @@
+EmployeeId,GivenName,Surname,Department,Title,Manager,StartDate
+100231,Anna,Meier,IT,System Engineer,,2026-12-01
+100232,Jürg,Müller-Lüdenscheidt,Finance,Accountant,,2026-12-01
+100233,François,Dubois,Marketing,Content Manager,,2026-12-15
