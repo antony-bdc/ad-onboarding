@@ -12,7 +12,7 @@ jobs:
         os: [ubuntu-24.04, windows-2022]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install modules
         shell: pwsh
         run: |
@@ -27,7 +27,7 @@ jobs:
     # Domain controllers often still run Windows PowerShell 5.1: make sure the module loads there.
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - shell: powershell
         run: |
           Import-Module ./src/ADProvisioning/ADProvisioning.psd1 -Force
