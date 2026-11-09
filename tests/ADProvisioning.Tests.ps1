@@ -1,12 +1,20 @@
 ﻿#Requires -Modules @{ ModuleName = 'Pester'; ModuleVersion = '5.0' }
 
 BeforeAll {
-    # The ActiveDirectory module isn't available in CI; stubs let Pester mock the cmdlets.
-    foreach ($cmd in 'Get-ADUser', 'New-ADUser', 'Add-ADGroupMember', 'Disable-ADAccount',
-        'Remove-ADGroupMember', 'Set-ADUser', 'Move-ADObject') {
-        if (-not (Get-Command $cmd -ErrorAction SilentlyContinue)) {
-            New-Item -Path "function:global:$cmd" -Value { param([Parameter(ValueFromRemainingArguments)] $Rest) } | Out-Null
+    # The ActiveDirectory module isn't available in CI. These stubs declare the real parameter
+    # names, so Pester's mocks can bind them and ParameterFilter can check $Path, $Identity, ...
+    if (-not (Get-Module -ListAvailable ActiveDirectory)) {
+        function global:Get-ADUser { [CmdletBinding()] param($Filter, $Identity, $Properties) }
+        function global:New-ADUser {
+            [CmdletBinding()]
+            param($Name, $DisplayName, $GivenName, $Surname, $SamAccountName, $UserPrincipalName, $EmployeeID,
+                $Department, $Path, $AccountPassword, $ChangePasswordAtLogon, $Enabled, $Title, $Manager)
         }
+        function global:Add-ADGroupMember { [CmdletBinding()] param($Identity, $Members) }
+        function global:Disable-ADAccount { [CmdletBinding()] param($Identity) }
+        function global:Remove-ADGroupMember { [CmdletBinding(SupportsShouldProcess)] param($Identity, $Members) }
+        function global:Set-ADUser { [CmdletBinding()] param($Identity, $Description) }
+        function global:Move-ADObject { [CmdletBinding()] param($Identity, $TargetPath) }
     }
     Import-Module "$PSScriptRoot/../src/ADProvisioning/ADProvisioning.psd1" -Force
     $script:config = "$PSScriptRoot/../config/provisioning.json"
