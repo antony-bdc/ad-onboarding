@@ -1,4 +1,4 @@
-# ad-user-provisioning
+# ad-onboarding
 
 PowerShell module for joiner/leaver processes in Active Directory: new employees are created
 from an HR CSV export, leavers are offboarded in a traceable way. Built so that it is safe to run
